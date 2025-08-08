@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>Untitled</title>
+  
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="utf-8" />
+
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+
+<title>AI Talking Girl - Demo</title>
+
+<style>
+
+  :root{
+
+    --bg:#0f1724; --card:#0b1220; --accent:#ff6b81; --muted:#9aa4b2;
+
+    --glass: rgba(255,255,255,0.03);
+
+  }
+
+  html,body{height:100%; margin:0; font-family:Inter, system-ui, Arial; background: linear-gradient(180deg,#07102a 0%, #0f1724 100%); color:#e6eef6;}
+
+  .app{
+
+    max-width:420px; margin:18px auto; padding:18px; border-radius:18px;
+
+  }
+
+  .card{
+
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+
+    backdrop-filter: blur(6px);
+
+    border-radius:16px; padding:14px;
+
+    box-shadow: 0 6px 22px rgba(2,6,23,0.6);
+
+    border: 1px solid rgba(255,255,255,0.03);
+
+  }
+
+  /* Header */
+
+  .header{display:flex; gap:12px; align-items:center;}
+
+  .avatar{
+
+    width:72px; height:72px; border-radius:16px; overflow:hidden; flex:0 0 72px;
+
+    border: 1px solid rgba(255,255,255,0.06); background:linear-gradient(135deg,#1b2a4a,#24335a);
+
+    display:flex; align-items:center; justify-content:center;
+
+  }
+
+  .avatar svg{width:72px;height:72px; display:block;}
+
+  .title{flex:1}
+
+  .title h1{margin:0;font-size:18px;letter-spacing:-0.2px}
+
+  .title p{margin:2px 0 0;font-size:12px;color:var(--muted)}
+
+  /* Chat area */
+
+  .chat{height:52vh; overflow:auto; margin-top:12px; padding-right:6px;}
+
+  .msg{display:flex; gap:8px; margin-bottom:12px; align-items:flex-end}
+
+  .msg.user{justify-content:flex-end}
+
+  .bubble{
+
+    max-width:78%; padding:10px 12px; border-radius:12px; font-size:14px; line-height:1.35;
+
+    box-shadow: 0 4px 10px rgba(2,6,23,0.4);
+
+  }
+
+  .bubble.ai{background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border:1px solid rgba(255,255,255,0.03)}
+
+  .bubble.user{background:linear-gradient(90deg, #ff6b81, #ff8fa3); color:#031028; border-radius:14px 14px 4px 14px;}
+
+  /* Controls */
+
+  .controls{display:flex; gap:8px; margin-top:12px}
+
+  .input{
+
+    flex:1; position:relative;
+
+  }
+
+  input[type="text"]{
+
+    width:100%; padding:12px 44px 12px 12px; border-radius:12px; border: none; outline:none;
+
+    background:var(--glass); color:inherit; font-size:15px;
+
+  }
+
+  .mic-btn, .send-btn{
+
+    width:44px; height:44px; border-radius:10px; display:inline-flex; align-items:center; justify-content:center;
+
+    border:none; cursor:pointer; font-size:18px;
+
+    background: linear-gradient(180deg,#121827,#0c1420); color:var(--accent);
+
+  }
+
+  .mic-btn.recording{ box-shadow: 0 6px 18px rgba(255,107,129,0.12); border: 1px solid rgba(255,107,129,0.08); color:#fff; background: linear-gradient(90deg,#ff4b6b,#ff7fa0); }
+
+  .small-note{font-size:12px;color:var(--muted); margin-top:6px; text-align:center;}
+
+  /* quick replies */
+
+  .quick{display:flex; gap:8px; margin-top:10px; flex-wrap:wrap}
+
+  .chip{padding:8px 10px; border-radius:12px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.02); cursor:pointer; font-size:13px}
+
+  /* responsive */
+
+  @media (max-width:420px){ .app{margin:8px;}}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="app card">
+
+  <div class="header">
+
+    <div class="avatar" id="avatar">
+
+      <!-- simple anime-style SVG avatar, replace if you want -->
+
+      <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="avatar">
+
+        <defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#ff9ab3"/><stop offset="1" stop-color="#ff6b81"/></linearGradient></defs>
+
+        <rect width="120" height="120" rx="16" fill="#0f2340"/>
+
+        <g transform="translate(10,10)">
+
+          <ellipse cx="50" cy="72" rx="36" ry="24" fill="#fce8f0"/>
+
+          <path d="M18 40 q32 -36 64 0" fill="#fff5fb"/>
+
+          <circle cx="36" cy="42" r="6" fill="#1b2028"/>
+
+          <circle cx="64" cy="42" r="6" fill="#1b2028"/>
+
+        </g>
+
+      </svg>
+
+    </div>
+
+    <div class="title">
+
+      <h1>Ai-chan 💬</h1>
+
+      <p>Tap mic or type to talk — she will reply with voice.</p>
+
+    </div>
+
+  </div>
+
+  <div class="chat" id="chat" aria-live="polite"></div>
+
+  <div class="controls">
+
+    <div class="input">
+
+      <input id="textInput" type="text" placeholder="Say something or type..." autocomplete="off" />
+
+    </div>
+
+    <button id="micBtn" class="mic-btn" title="Voice input (tap)">
+
+      🎤
+
+    </button>
+
+    <button id="sendBtn" class="send-btn" title="Send">
+
+      ➤
+
+    </button>
+
+  </div>
+
+  <div class="quick" id="quick">
+
+    <div class="chip">Hello</div>
+
+    <div class="chip">Tell me a joke</div>
+
+    <div class="chip">Sing a line</div>
+
+    <div class="chip">What's your name?</div>
+
+  </div>
+
+  <div class="small-note">Works best in Chrome on Android. Microphone & speech permissions required.</div>
+
+</div>
+
+<script>
+
+/*
+
+  AI Talking Girl - Single file demo
+
+  Features:
+
+  - SpeechRecognition (voice input)
+
+  - SpeechSynthesis (voice output)
+
+  - Simple rule-based "AI" generator (replaceable with server/API)
+
+  - Chat UI with user/AI bubbles
+
+*/
+
+/* ---------- Utilities ---------- */
+
+const $ = sel => document.querySelector(sel);
+
+const chat = $('#chat');
+
+const input = $('#textInput');
+
+const micBtn = $('#micBtn');
+
+const sendBtn = $('#sendBtn');
+
+const quick = document.getElementById('quick');
+
+function addMessage(text, who='ai'){
+
+  const el = document.createElement('div');
+
+  el.className = 'msg ' + (who === 'user' ? 'user' : 'ai');
+
+  const bubble = document.createElement('div');
+
+  bubble.className = 'bubble ' + (who === 'user' ? 'user' : 'ai');
+
+  bubble.innerText = text;
+
+  el.appendChild(bubble);
+
+  chat.appendChild(el);
+
+  chat.scrollTop = chat.scrollHeight;
+
+}
+
+/* ---------- Speech Synthesis ---------- */
+
+function speak(text){
+
+  if(!('speechSynthesis' in window)) return;
+
+  const ut = new SpeechSynthesisUtterance(text);
+
+  // choose a voice (best effort)
+
+  const voices = window.speechSynthesis.getVoices();
+
+  // prefer female voice if available
+
+  for(const v of voices){
+
+    if(/female|woman|girl|female/i.test(v.name) || /Google UK English Female/i.test(v.name)){
+
+      ut.voice = v; break;
+
+    }
+
+  }
+
+  ut.rate = 1;
+
+  ut.pitch = 1.05;
+
+  window.speechSynthesis.cancel(); // stop previous
+
+  window.speechSynthesis.speak(ut);
+
+}
+
+/* ---------- Simple AI Generator (rule-based) ---------- */
+
+/* Replace this function with a remote API call (e.g., fetch to your server) when you want smarter replies. */
+
+function generateReply(userText){
+
+  userText = (userText||'').toLowerCase().trim();
+
+  // quick matching rules
+
+  if(!userText) return "Hmm? You didn't say anything. Try asking me something!";
+
+  if(/hello|hi|hey|hii/.test(userText)) return "Hello! I'm Ai-chan — your anime helper. How can I help you today?";
+
+  if(/your name|who are you/.test(userText)) return "I am Ai-chan — your friendly talking AI. Nice to meet you!";
+
+  if(/joke|jokes|make me laugh/.test(userText)) {
+
+    const jokes = [
+
+      "Why do programmers prefer dark mode? Because light attracts bugs!",
+
+      "I tried to tell a UDP joke, but I'm not sure if you got it.",
+
+      "Why did the function return early? It got tired of looping!"
+
+    ];
+
+    return jokes[Math.floor(Math.random()*jokes.length)];
+
+  }
+
+  if(/sing|song|sing a line/.test(userText)){
+
+    return "♪ La la la~ Ai-chan singing for you — hope you like it! ♪";
+
+  }
+
+  if(/how are you|how r u/.test(userText)) return "I'm good! Feeling full of data and energy 😊";
+
+  if(/time|what time/.test(userText)) return "Current time is " + new Date().toLocaleTimeString();
+
+  if(/weather/.test(userText)) return "I can't check live weather without internet, but I hope it's sunny where you are!";
+
+  if(/thank|thanks/.test(userText)) return "You're welcome! Anytime :)";
+
+  // fallback creative reply (some basic variety)
+
+  const fillers = [
+
+    "That's interesting — tell me more!",
+
+    "Wow, I like the sound of that. What else?",
+
+    "Hmmm... let me think... Okay, I have an idea! Want to hear it?",
+
+    "I don't fully understand, but I can try to help. Can you rephrase?"
+
+  ];
+
+  return fillers[Math.floor(Math.random()*fillers.length)];
+
+}
+
+/* ---------- Handle send (text) ---------- */
+
+function handleSend(text){
+
+  text = text.trim();
+
+  if(!text) return;
+
+  addMessage(text, 'user');
+
+  input.value = '';
+
+  // simulate thinking delay
+
+  setTimeout(()=>{
+
+    const reply = generateReply(text);
+
+    addMessage(reply, 'ai');
+
+    speak(reply);
+
+  }, 400);
+
+}
+
+/* ---------- Quick chips ---------- */
+
+quick.addEventListener('click', e=>{
+
+  if(!e.target.classList.contains('chip')) return;
+
+  handleSend(e.target.innerText);
+
+});
+
+/* ---------- Send button ---------- */
+
+sendBtn.addEventListener('click', ()=> handleSend(input.value));
+
+input.addEventListener('keydown', e=>{
+
+  if(e.key === 'Enter') handleSend(input.value);
+
+});
+
+/* ---------- Speech Recognition (voice input) ---------- */
+
+let recognition = null;
+
+let recognizing = false;
+
+if('webkitSpeechRecognition' in window || 'SpeechRecognition' in window){
+
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  recognition = new SR();
+
+  recognition.lang = 'en-US'; // change to 'hi-IN' for Hindi
+
+  recognition.interimResults = false;
+
+  recognition.continuous = false;
+
+  recognition.onstart = () => {
+
+    recognizing = true;
+
+    micBtn.classList.add('recording');
+
+    micBtn.innerText = '🎙️';
+
+  };
+
+  recognition.onend = () => {
+
+    recognizing = false;
+
+    micBtn.classList.remove('recording');
+
+    micBtn.innerText = '🎤';
+
+  };
+
+  recognition.onresult = (e) => {
+
+    const text = e.results[0][0].transcript;
+
+    handleSend(text);
+
+  };
+
+  recognition.onerror = (e) => {
+
+    console.warn('Speech error', e);
+
+    recognizing = false;
+
+    micBtn.classList.remove('recording');
+
+    micBtn.innerText = '🎤';
+
+  };
+
+} else {
+
+  // browser does not support
+
+  micBtn.title = "Speech recognition not supported in this browser";
+
+  micBtn.style.opacity = 0.8;
+
+}
+
+/* ---------- Mic button behaviour ---------- */
+
+micBtn.addEventListener('click', ()=>{
+
+  if(!recognition){
+
+    alert('Speech recognition not available in this browser. Use Chrome on Android for voice support.');
+
+    return;
+
+  }
+
+  if(recognizing){
+
+    recognition.stop();
+
+    return;
+
+  }
+
+  try{
+
+    recognition.start();
+
+  }catch(err){
+
+    console.error(err);
+
+  }
+
+});
+
+/* ---------- Optional: replace generateReply to call remote AI (example) ----------
+
+   If later you want to use OpenAI/your server, replace generateReply() with an async function
+
+   that performs `fetch()` to your backend and returns the AI text. Keep UI functions the same.
+
+   Important: Do NOT call OpenAI API directly from client-side (security risk). Use a server.
+
+*/
+
+/* ---------- small welcome ---------- */
+
+addMessage("Konnichiwa! I'm Ai-chan. Tap the mic or type to chat — I will reply with voice.", 'ai');
+
+</script>
+
+</body>
+
+</html>
+<!-- partial -->
+  
+</body>
+</html>
