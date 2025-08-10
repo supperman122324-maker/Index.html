@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>Untitled</title>
+  <link rel="stylesheet" href="./style.css">
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Echoes of Choice - Psychological Profiling Game</title>
+
+    <meta name="description" content="Interactive psychological profiling game that explores personality through morally complex scenarios. Features multilingual support and rich visual experiences.">
+
+    
+
+    <!-- Google Fonts -->
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&family=Noto+Sans+Devanagari:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    
+
+    <!-- Font Awesome for icons -->
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    
+
+    <link rel="stylesheet" href="styles.css">
+
+</head>
+
+<body>    <!-- Loading Screen -->
+
+    <div id="loading-screen" class="loading-screen">
+
+        <div class="loading-content">
+
+            <div class="loading-spinner"></div>
+
+            <h2 id="loading-text">Loading Echoes of Choice...</h2>
+
+            <p id="loading-subtext">Preparing your psychological journey</p>
+
+        </div>
+
+    </div>
+
+    <!-- Main Game Container -->
+
+    <div id="game-container" class="game-container hidden">
+
+        <!-- Particle Canvas -->
+
+        <canvas id="particle-canvas" class="particle-canvas"></canvas>
+
+        
+
+        <!-- Background Layers -->
+
+        <div id="background-layer" class="background-layer"></div>        <!-- Game Header -->
+
+        <header class="game-header">
+
+            <div class="header-content">
+
+                <h1 class="game-title">
+
+                    <span id="game-title-text">Echoes of Choice</span>
+
+                </h1>
+
+                
+
+                <div class="header-controls">
+
+                    <!-- Language Toggle -->
+
+                    <button id="language-toggle" class="control-button" title="Switch Language">
+
+                        <i class="fas fa-language"></i>
+
+                        <span id="language-text">EN</span>
+
+                    </button>
+
+                    
+
+                    <!-- Audio Toggle -->
+
+                    <button id="audio-toggle" class="control-button" title="Toggle Audio">
+
+                        <i class="fas fa-volume-up"></i>
+
+                    </button>
+
+                    
+
+                    <!-- Volume Control -->
+
+                    <div class="volume-control">
+
+                        <input type="range" id="volume-slider" min="0" max="100" value="70" class="volume-slider">
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </header>        <!-- Main Content -->
+
+        <main class="main-content">
+
+            <!-- Trait Bars -->
+
+            <div class="trait-bars-container">
+
+                <div class="trait-bars">
+
+                    <div class="trait-bar" data-trait="Empathy">
+
+                        <div class="trait-label">
+
+                            <span id="trait-empathy">Empathy</span>
+
+                            <span class="trait-value" id="empathy-value">0</span>
+
+                        </div>
+
+                        <div class="trait-progress">
+
+                            <div class="trait-fill empathy-fill" style="width: 50%"></div>
+
+                        </div>
+
+                    </div>
+
+                    
+
+                    <div class="trait-bar" data-trait="Pragmatism">
+
+                        <div class="trait-label">
+
+                            <span id="trait-pragmatism">Pragmatism</span>
+
+                            <span class="trait-value" id="pragmatism-value">0</span>
+
+                        </div>
+
+                        <div class="trait-progress">
+
+                            <div class="trait-fill pragmatism-fill" style="width: 50%"></div>
+
+                        </div>
+
+                    </div>
+
+                    
+
+                    <div class="trait-bar" data-trait="RiskTaking">
+
+                        <div class="trait-label">
+
+                            <span id="trait-risktaking">Risk-taking</span>
+
+                            <span class="trait-value" id="risktaking-value">0</span>
+
+                        </div>
+
+                        <div class="trait-progress">
+
+                            <div class="trait-fill risktaking-fill" style="width: 50%"></div>
+
+                        </div>
+
+                    </div>
+
+                    
+
+                    <div class="trait-bar" data-trait="Trust">
+
+                        <div class="trait-label">
+
+                            <span id="trait-trust">Trust</span>
+
+                            <span class="trait-value" id="trust-value">0</span>
+
+                        </div>
+
+                        <div class="trait-progress">
+
+                            <div class="trait-fill trust-fill" style="width: 50%"></div>
+
+                        </div>
+
+                    </div>
+
+                    
+
+                    <div class="trait-bar" data-trait="MoralFlexibility">
+
+                        <div class="trait-label">
+
+                            <span id="trait-moralflexibility">Moral Flexibility</span>
+
+                            <span class="trait-value" id="moralflexibility-value">0</span>
+
+                        </div>
+
+                        <div class="trait-progress">
+
+                            <div class="trait-fill moralflexibility-fill" style="width: 50%"></div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>            <!-- Game Content -->
+
+            <div class="game-content">
+
+                <!-- Narrator Section -->
+
+                <section class="narrator-section">
+
+                    <div class="scene-image-container">
+
+                        <img id="scene-image" class="scene-image" src="assets/images/fallback/scene1.jpg" alt="Scene">
+
+                        <div class="image-overlay"></div>
+
+                    </div>
+
+                    
+
+                    <div class="narrator-content">
+
+                        <div class="scene-info">
+
+                            <span id="scene-counter">Scene 1 of 8</span>
+
+                        </div>
+
+                        
+
+                        <h2 id="scene-title" class="scene-title">Welcome to Echoes of Choice</h2>
+
+                        
+
+                        <div class="narrative-text">
+
+                            <p id="narrative-content" class="typewriter-text">
+
+                                Welcome to a journey of self-discovery through the echoes of your choices...
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+                <!-- Choices Container -->
+
+                <section class="choices-container">
+
+                    <div id="choices-list" class="choices-list">
+
+                        <!-- Choices will be dynamically generated -->
+
+                    </div>
+
+                    
+
+                    <!-- Progress Bar -->
+
+                    <div class="progress-container">
+
+                        <div class="progress-bar">
+
+                            <div id="progress-fill" class="progress-fill" style="width: 12.5%"></div>
+
+                        </div>
+
+                        <span id="progress-text" class="progress-text">Progress: 1/8</span>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+        </main>
+
+    </div>    <!-- Personality Reveal Modal -->
+
+    <div id="personality-modal" class="modal-overlay hidden">
+
+        <div class="modal-content personality-modal">
+
+            <div class="modal-header">
+
+                <h2 id="modal-title">Your Personality Profile</h2>
+
+            </div>
+
+            
+
+            <div class="modal-body">
+
+                <div class="personality-portrait">
+
+                    <img id="personality-image" src="assets/images/portraits/default.jpg" alt="Personality Portrait">
+
+                </div>
+
+                
+
+                <div class="personality-info">
+
+                    <h3 id="personality-type">The Balanced Individual</h3>
+
+                    <p id="personality-description">You demonstrate a harmonious blend of traits...</p>
+
+                </div>
+
+                
+
+                <div class="final-traits">
+
+                    <h4 id="traits-summary-title">Your Trait Summary</h4>
+
+                    <div class="final-trait-bars">
+
+                        <!-- Final trait visualization -->
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            
+
+            <div class="modal-footer">
+
+                <button id="restart-button" class="primary-button">
+
+                    <i class="fas fa-redo"></i>
+
+                    <span id="restart-text">Play Again</span>
+
+                </button>
+
+                <button id="share-button" class="secondary-button">
+
+                    <i class="fas fa-share"></i>
+
+                    <span id="share-text">Share Results</span>
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Toast Notifications -->
+
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Audio Elements -->
+
+    <audio id="bg-music-calm" loop preload="auto">
+
+        <source src="assets/audio/calm-bgm.mp3" type="audio/mpeg">
+
+    </audio>
+
+    <audio id="bg-music-tense" loop preload="auto">
+
+        <source src="assets/audio/tense-bgm.mp3" type="audio/mpeg">
+
+    </audio>
+
+    <audio id="bg-music-emotional" loop preload="auto">
+
+        <source src="assets/audio/emotional-bgm.mp3" type="audio/mpeg">
+
+    </audio>
+
+    <audio id="choice-positive" preload="auto">
+
+        <source src="assets/audio/choice-positive.mp3" type="audio/mpeg">
+
+    </audio>
+
+    <audio id="choice-negative" preload="auto">
+
+        <source src="assets/audio/choice-negative.mp3" type="audio/mpeg">
+
+    </audio>
+
+    <!-- JavaScript -->
+
+    <script src="js/data.js"></script>
+
+    <script src="js/utils.js"></script>
+
+    <script src="js/audio.js"></script>
+
+    <script src="js/particles.js"></script>
+
+    <script src="js/typewriter.js"></script>
+
+    <script src="js/game-state.js"></script>
+
+    <script src="js/ui.js"></script>
+
+    <script src="js/main.js"></script>
+
+</body>
+
+</html>
+<!-- partial -->
+  <script  src="./script.js"></script>
+
+</body>
+</html>
